@@ -42,18 +42,16 @@ function getCards() {
 
 function displayResults(data) {
   console.log(data);
-  $(".results").empty();
-  $(".results").append(
-    `<li>
-    <p>${data}</p>
-    </li>`
-  );
+  var display = document.getElementById("displayData");
+  for (var i = 0; i < data.length; i++) {
+    var div = document.createElement("div");
+    div.innerHTML = "Name: " + data[i].name + "Username:" + data[i].username;
+    display.appendChild(div);
+  }
 }
 
-function watchForm() {
-  $("form").submit((event) => {
-    getCards();
-  });
+function loaded() {
+  getCards();
 }
 
-$(watchForm);
+$(loaded);
