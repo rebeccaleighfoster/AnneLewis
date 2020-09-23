@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Anne Lewis</title>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous"
+    ></script>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div id="displayData"></div>
+    <script>
+      //retrieves cards from database
+      function getCards() {
+        let url =
+          "http://faker.hook.io/?property=helpers.userCard&amp;locale=en_US";
+        const promises = Array(25)
+          .fill()
+          .map(() => fetch(url));
+        //dynamically call the api 25 times to get 25 pieces of data
+        Promise.all(promises)
+          .then(function (responses) {
+            return Promise.all(
+              responses.map(function (response) {
+                return response.json();
+              })
+            );
+          })
+          //trigger the function to display results
+          .then((data) => displayResults(data))
+          //catch any errors and log them to the console
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+
+      function displayResults(data) {
+        let html = "";
+        //map through the data and insert it into the approprate div in the HTML
+        data.map((user) => {
+          html += `<div class ="card">
+            Name: ${user.name} <br />
+            Username: ${user.username} <br />
+            Email: ${user.email} <br />
+            Address: ${user.address.street} ${user.address.suite} <br />
+            ${user.address.city}, ${user.address.zipcode}  <br />
+            Phone: ${user.phone} <br />
+            Company Info:  ${user.company.name} <br />
+            ${user.company.catchPhrase} <br />
+              ${user.company.bs} <br />
+            <br />
+          </div>`;
+        });
+        $("#displayData").html(html);
+      }
+
+      //when the browser loads, call getCards function
+      $(getCards);
+    </script>
+  </body>
+</html>
